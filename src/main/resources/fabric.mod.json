@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "drafuteleporters",
+  "version": "${version}",
+  "name": "DrafuTeleporters",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/drafuteleporters/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "dev.febru.drafuteleporters.client.MainClient"
+    ],
+    "main": [
+      "dev.febru.drafuteleporters.Main"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  },
+  "mixins": [
+    "mixins.json"
+  ]
+}

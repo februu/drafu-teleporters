@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.febru.drafuteleporters.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "drafuteleporters.refmap.json",
+  "mixins": [
+    "ItemEntityMixin"
+  ],
+  "client": [],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
