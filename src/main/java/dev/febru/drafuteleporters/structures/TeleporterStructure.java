@@ -4,6 +4,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import static dev.febru.drafuteleporters.block.ModBlocks.TELEPORTER_CORE_BLOCK;
+
 public class TeleporterStructure {
 
     public static class StructureResult {
@@ -111,7 +113,7 @@ public class TeleporterStructure {
         };
 
         for (BlockPos pos : positions)
-            if (!world.getBlockState(pos).isOf(Blocks.PURPLE_GLAZED_TERRACOTTA))
+            if (!world.getBlockState(pos).isOf(TELEPORTER_CORE_BLOCK))
                 return false;
 
         return true;
@@ -125,7 +127,6 @@ public class TeleporterStructure {
                     return false;
                 }
             }
-
         return true;
     }
 }

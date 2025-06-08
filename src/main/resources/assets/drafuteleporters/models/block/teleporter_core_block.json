@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "drafuteleporters:block/teleporter_core_block"
+  },
+  "render_type": "translucent"
+}

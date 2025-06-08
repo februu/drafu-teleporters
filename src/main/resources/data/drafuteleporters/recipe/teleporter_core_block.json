@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "TTT",
+    "TET",
+    "TTT"
+  ],
+  "key": {
+    "E": "minecraft:ender_pearl",
+    "T": "minecraft:tinted_glass"
+  },
+  "result": {
+    "id": "drafuteleporters:teleporter_core_block",
+    "count": 1
+  }
+}

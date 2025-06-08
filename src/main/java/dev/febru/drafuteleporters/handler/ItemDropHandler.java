@@ -1,6 +1,6 @@
-package dev.febru.drafuteleporters.handlers;
+package dev.febru.drafuteleporters.handler;
 
-import dev.febru.drafuteleporters.managers.TeleporterDataManager;
+import dev.febru.drafuteleporters.manager.TeleporterDataManager;
 import dev.febru.drafuteleporters.payloads.OpenTeleporterMenuPayload;
 import dev.febru.drafuteleporters.structures.TeleporterStructure;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -16,7 +16,7 @@ import net.minecraft.world.dimension.DimensionTypes;
 
 import java.util.List;
 
-import static dev.febru.drafuteleporters.managers.TeleporterDataManager.getAllTeleporters;
+import static dev.febru.drafuteleporters.manager.TeleporterDataManager.getAllTeleporters;
 import static dev.febru.drafuteleporters.structures.TeleporterStructure.validateTeleporterStructure;
 
 public class ItemDropHandler {

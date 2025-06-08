@@ -1,6 +1,6 @@
 package dev.febru.drafuteleporters.payloads;
 
-import dev.febru.drafuteleporters.managers.TeleporterDataManager.TeleporterData;
+import dev.febru.drafuteleporters.manager.TeleporterDataManager.TeleporterData;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;

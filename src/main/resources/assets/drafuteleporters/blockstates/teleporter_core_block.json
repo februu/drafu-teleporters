@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "drafuteleporters:block/teleporter_core_block"
+    }
+  }
+}

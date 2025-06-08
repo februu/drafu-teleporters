@@ -1,41 +1,36 @@
 package dev.febru.drafuteleporters;
 
-import dev.febru.drafuteleporters.handlers.BlockBreakHandler;
-import dev.febru.drafuteleporters.handlers.ItemDropHandler;
-import dev.febru.drafuteleporters.managers.TeleporterDataManager;
+import dev.febru.drafuteleporters.block.ModBlocks;
+import dev.febru.drafuteleporters.handler.BlockBreakHandler;
+import dev.febru.drafuteleporters.manager.TeleporterDataManager;
 import dev.febru.drafuteleporters.payloads.TeleportRequestPayload;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.particle.ParticleEffect;
+
+import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.dimension.DimensionTypes;
+import net.minecraft.util.math.Vec3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.UUID;
-
-import static dev.febru.drafuteleporters.managers.TeleporterDataManager.getAllTeleporters;
+import static dev.febru.drafuteleporters.manager.TeleporterDataManager.getAllTeleporters;
 
 public class Main implements ModInitializer {
 
     public static final String MOD_ID = "drafuteleporters";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    private int ticksElapsed = 0;
+    private int tickCounter = 0;
+    private static final int TICKS_PER_SECOND = 10;
 
     @Override
     public void onInitialize() {
+
+        ModBlocks.registerModBlocks();
 
         // Register BlockBreak event
         PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, blockEntity) -> {
@@ -44,72 +39,38 @@ public class Main implements ModInitializer {
 
         // Register TP Request handling
         PayloadTypeRegistry.playC2S().register(TeleportRequestPayload.ID, TeleportRequestPayload.CODEC);
-        ServerPlayNetworking.registerGlobalReceiver(TeleportRequestPayload.ID, (payload, context) -> {
-            context.server().execute(() -> {
+        ServerPlayNetworking.registerGlobalReceiver(TeleportRequestPayload.ID, TeleporterDataManager::teleportPlayer);
 
-                UUID playerUuid = payload.playerUuid();
-                ServerPlayerEntity player = context.server().getPlayerManager().getPlayer(playerUuid);
+        System.out.println("DrafuTeleporters initialized.");
 
-                if (player != null) {
+        // Register particle spawning every second
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
 
-                if (payload.cancelled()) {
-                    player.giveItemStack(new ItemStack(Items.ENDER_PEARL, 1));
-                    return;
+            tickCounter++;
+            if (tickCounter >= TICKS_PER_SECOND) {
+                tickCounter = 0;
+
+                for (TeleporterDataManager.TeleporterData teleporter : getAllTeleporters()) {
+                    ServerWorld world = server.getOverworld();
+
+                    DustParticleEffect dustEffect = new DustParticleEffect(0x349A89,1.5f);
+
+                    world.spawnParticles(
+                            dustEffect,      // Mob particle type
+                            (double) (teleporter.pos1.getX() + teleporter.pos2.getX()) / 2 + 0.5,     // X coordinate
+                            teleporter.pos2.getY() + 2.0,                                             // Y coordinate
+                            (double) (teleporter.pos1.getZ() + teleporter.pos2.getZ()) / 2 + 0.5,     // Z coordinate
+                            25,                             // Number of particles
+                            0.25,                           // Delta X (spread)
+                            1,                              // Delta Y (spread)
+                            0.25,                           // Delta Z (spread)
+                            0.1                             // Speed
+                    );
                 }
 
-                TeleporterDataManager.TeleporterData selected = payload.teleporterData();
-
-                    double midX = (selected.pos1.getX() + selected.pos2.getX()) / 2.0 + 0.5;
-                    double midY = (selected.pos2.getY()) + 1.0;
-                    double midZ = (selected.pos1.getZ() + selected.pos2.getZ()) / 2.0 + 0.5;
-
-                    player.requestTeleport(midX, midY, midZ);
-                    ServerWorld world = player.getServerWorld();
-                    player.sendMessage(Text.literal("✦ Teleported to " + selected.name + " ✦"), true);
-
-                    // Schedule particles and sound for next tick
-                    new Thread(() -> {
-                        try {
-                            Thread.sleep(100);
-
-                            // Schedule particles and sound for next tick on main server thread
-                            context.server().execute(() -> {
-
-                                // Spawn particle effects at destination
-                                world.spawnParticles(
-                                        ParticleTypes.PORTAL,           // Particle type
-                                        midX, midY, midZ,               // Position
-                                        150,                             // Count
-                                        0.5, 1.0, 0.5,   // Spread (x, y, z)
-                                        0.1                             // Speed
-                                );
-
-                                // Add extra sparkle effect
-                                world.spawnParticles(
-                                        ParticleTypes.END_ROD,
-                                        midX, midY + 0.5, midZ,
-                                        150,
-                                        0.3, 0.5, 0.3,
-                                        0.05
-                                );
-
-                                // Play teleport sound
-                                world.playSound(
-                                        null,                            // Player (null = everyone nearby hears it)
-                                        midX, midY, midZ,                       // Position
-                                        SoundEvents.ENTITY_ENDERMAN_TELEPORT,   // Sound
-                                        SoundCategory.PLAYERS,                  // Category
-                                        1.0f,                                   // Volume
-                                        1.0f                                    // Pitch
-                                );
-                            });
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                            LOGGER.warn("Particle spawn thread interrupted", e);
-                        }
-                    }).start();
-                }
-            });
+            }
         });
+
     }
+
 }

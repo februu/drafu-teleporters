@@ -8,7 +8,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.List;
 
-import dev.febru.drafuteleporters.managers.TeleporterDataManager.TeleporterData;
+import dev.febru.drafuteleporters.manager.TeleporterDataManager.TeleporterData;
 import net.minecraft.util.math.BlockPos;
 
 public record OpenTeleporterMenuPayload(List<TeleporterData> teleporters) implements CustomPayload {

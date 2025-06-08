@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "drafuteleporters",
   "version": "${version}",
-  "name": "DrafuTeleporters",
+  "name": "drafuteleporters",
   "description": "",
   "authors": [],
   "contact": {},
@@ -23,6 +23,6 @@
     "minecraft": "${minecraft_version}"
   },
   "mixins": [
-    "mixins.json"
+    "drafuteleporters.mixins.json"
   ]
 }

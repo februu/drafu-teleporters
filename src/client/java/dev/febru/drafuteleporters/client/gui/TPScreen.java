@@ -1,6 +1,6 @@
 package dev.febru.drafuteleporters.client.gui;
 
-import dev.febru.drafuteleporters.managers.TeleporterDataManager;
+import dev.febru.drafuteleporters.manager.TeleporterDataManager;
 import dev.febru.drafuteleporters.payloads.TeleportRequestPayload;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
