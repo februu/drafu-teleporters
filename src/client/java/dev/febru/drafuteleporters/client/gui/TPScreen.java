@@ -28,6 +28,8 @@ public class TPScreen extends Screen {
 
     private DropdownButton dropdownButton;
 
+    private boolean sentTeleportRequest = false;
+
     public TPScreen(Text title, List<TeleporterDataManager.TeleporterData> teleporters) {
         super(title);
         OPTIONS = teleporters;
@@ -107,8 +109,13 @@ public class TPScreen extends Screen {
 
     @Override
     public void close() {
-        UUID playerUuid = MinecraftClient.getInstance().player.getUuid();
-        ClientPlayNetworking.send(new TeleportRequestPayload(playerUuid, null, true));
+
+        // If not sent request, request a pearl refund
+        if (!sentTeleportRequest) {
+            UUID playerUuid = MinecraftClient.getInstance().player.getUuid();
+            ClientPlayNetworking.send(new TeleportRequestPayload(playerUuid, null, true));
+        }
+
         super.close();
     }
 
@@ -221,6 +228,7 @@ public class TPScreen extends Screen {
     private void onActionButtonPressed() {
         if (selectedOption == null) return; // Safety check
 
+        sentTeleportRequest = true;
         UUID playerUuid = MinecraftClient.getInstance().player.getUuid();
         ClientPlayNetworking.send(new TeleportRequestPayload(playerUuid, selectedOption, false));
         MinecraftClient.getInstance().player.setPitch(0.0F);
@@ -228,8 +236,6 @@ public class TPScreen extends Screen {
     }
 
     private void onCloseButtonPressed() {
-        UUID playerUuid = MinecraftClient.getInstance().player.getUuid();
-        ClientPlayNetworking.send(new TeleportRequestPayload(playerUuid, null, true));
         this.close();
     }
 
