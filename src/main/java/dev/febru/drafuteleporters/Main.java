@@ -3,6 +3,7 @@ package dev.febru.drafuteleporters;
 import dev.febru.drafuteleporters.block.ModBlocks;
 import dev.febru.drafuteleporters.handler.BlockBreakHandler;
 import dev.febru.drafuteleporters.manager.TeleporterDataManager;
+import dev.febru.drafuteleporters.payloads.OpenTeleporterMenuPayload;
 import dev.febru.drafuteleporters.payloads.TeleportRequestPayload;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -37,7 +38,8 @@ public class Main implements ModInitializer {
             BlockBreakHandler.onBlockBroken(world, pos, state);
         });
 
-        // Register TP Request handling
+        // Register packets
+        PayloadTypeRegistry.playS2C().register(OpenTeleporterMenuPayload.ID, OpenTeleporterMenuPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(TeleportRequestPayload.ID, TeleportRequestPayload.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(TeleportRequestPayload.ID, TeleporterDataManager::teleportPlayer);
 

@@ -2,6 +2,7 @@ package dev.febru.drafuteleporters.client;
 
 import dev.febru.drafuteleporters.Main;
 import dev.febru.drafuteleporters.payloads.OpenTeleporterMenuPayload;
+import dev.febru.drafuteleporters.payloads.TeleportRequestPayload;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -20,8 +21,6 @@ public class MainClient implements ClientModInitializer {
         Main.LOGGER.info("Initializing client for " + Main.MOD_ID);
 
         BlockRenderLayerMap.INSTANCE.putBlock(TELEPORTER_CORE_BLOCK, RenderLayer.getTranslucent());
-
-            PayloadTypeRegistry.playS2C().register(OpenTeleporterMenuPayload.ID, OpenTeleporterMenuPayload.CODEC);
             ClientPlayNetworking.registerGlobalReceiver(OpenTeleporterMenuPayload.ID, (payload, context) -> {
                 context.client().execute(() -> {
                     context.client().setScreen(new TPScreen(Text.literal("Select destination"), payload.teleporters()));

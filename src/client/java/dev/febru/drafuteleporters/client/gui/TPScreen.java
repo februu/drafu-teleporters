@@ -215,7 +215,6 @@ public class TPScreen extends Screen {
     private void onActionButtonPressed() {
         if (selectedOption == null) return; // Safety check
 
-        System.out.println("Sending packet to server" + selectedOption);
         UUID playerUuid = MinecraftClient.getInstance().player.getUuid();
         ClientPlayNetworking.send(new TeleportRequestPayload(playerUuid, selectedOption, false));
         MinecraftClient.getInstance().player.setPitch(0.0F);

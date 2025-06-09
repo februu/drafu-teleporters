@@ -7,6 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionTypes;
 
+import static dev.febru.drafuteleporters.block.ModBlocks.TELEPORTER_CORE_BLOCK;
 import static dev.febru.drafuteleporters.manager.TeleporterDataManager.getAllTeleporters;
 import static dev.febru.drafuteleporters.manager.TeleporterDataManager.removeRegion;
 import static dev.febru.drafuteleporters.structures.TeleporterStructure.isBlockPartOfStructure;
@@ -17,8 +18,7 @@ public class BlockBreakHandler {
         if (!world.getDimensionEntry().matchesKey(DimensionTypes.OVERWORLD))
             return;
 
-        if (blockState.getBlock() == Blocks.PURPLE_GLAZED_TERRACOTTA || blockState.getBlock() == Blocks.DIAMOND_BLOCK) {
-            System.out.println("Block broken");
+        if (blockState.getBlock() == TELEPORTER_CORE_BLOCK || blockState.getBlock() == Blocks.DIAMOND_BLOCK) {
             for (TeleporterDataManager.TeleporterData teleporter : getAllTeleporters())
                 if (isBlockPartOfStructure(teleporter.pos1, teleporter.pos2, pos)) {
                     removeRegion(teleporter.name);
