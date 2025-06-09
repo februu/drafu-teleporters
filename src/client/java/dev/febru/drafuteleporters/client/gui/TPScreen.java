@@ -20,8 +20,6 @@ public class TPScreen extends Screen {
     private static final int DROPDOWN_HEIGHT = 20;
     private static final int SPACING = 30;
 
-    // Enhanced options list - you can add many more here
-
     private List<TeleporterDataManager.TeleporterData> OPTIONS = new ArrayList<>();
     private TeleporterDataManager.TeleporterData selectedOption = null; // Changed: Initialize to null
     private boolean dropdownOpen = false;
@@ -33,7 +31,7 @@ public class TPScreen extends Screen {
     public TPScreen(Text title, List<TeleporterDataManager.TeleporterData> teleporters) {
         super(title);
         OPTIONS = teleporters;
-        // Set selectedOption safely
+
         if (!OPTIONS.isEmpty()) {
             selectedOption = OPTIONS.get(0);
         }
@@ -106,6 +104,14 @@ public class TPScreen extends Screen {
             super.render(context, mouseX, mouseY, delta);
         }
     }
+
+    @Override
+    public void close() {
+        UUID playerUuid = MinecraftClient.getInstance().player.getUuid();
+        ClientPlayNetworking.send(new TeleportRequestPayload(playerUuid, null, true));
+        super.close();
+    }
+
 
     private void renderDropdown(DrawContext context, int mouseX, int mouseY) {
         if (OPTIONS.isEmpty()) return; // Don't render dropdown if no options
